@@ -11,11 +11,13 @@ struct ContentView: View {
     
     // How many times have you been here?
     @State private var registeredPresenceCount = 0
+    private var registeredPresenceCountKey: String = "timesUserWasPresentInApp"
     
     // Have you been here before?
     @State private var beenHereBefore = false
+    private var beenHereBeforeKey: String = "hasUserBeenHereBefore"
     
-    // Has presense been registered yet this session?
+    // Has presence been registered yet this session?
     @State private var registeredPresenceThisSession = false
     
     var body: some View {
@@ -46,8 +48,33 @@ struct ContentView: View {
         }
         // See: https://www.hackingwithswift.com/books/ios-swiftui/how-to-be-notified-when-your-swiftui-app-moves-to-the-background
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            
+            // Make sure the button can be presssed when app is opened again
             print("Moving to the background!")
             registeredPresenceThisSession = false
+            
+            // Gain access to user defaults
+            let defaults = UserDefaults.standard
+            
+            // Save the number of times the person has been here when app ends
+            defaults.set(registeredPresenceCount, forKey: registeredPresenceCountKey)
+            defaults.set(beenHereBefore, forKey: beenHereBeforeKey)
+            
+        }
+        .onAppear() {
+            
+            // When app is opened, retrieve data from UserDefaults storage
+            print("Moving back to the foreground!")
+            
+            // Gain access to user defaults
+            let defaults = UserDefaults.standard
+            
+            // Get the boolean
+            beenHereBefore = defaults.bool(forKey: beenHereBeforeKey)
+            
+            // Get the count of times the user has been here before
+            registeredPresenceCount = defaults.integer(forKey: registeredPresenceCountKey)
+            
         }
     }
 }
