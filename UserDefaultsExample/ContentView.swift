@@ -43,6 +43,11 @@ struct ContentView: View {
             }
             
         }
+        // See: https://www.hackingwithswift.com/books/ios-swiftui/how-to-be-notified-when-your-swiftui-app-moves-to-the-background
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            print("Moving to the background!")
+            registeredPresenceThisSession = false
+        }
     }
 }
 
