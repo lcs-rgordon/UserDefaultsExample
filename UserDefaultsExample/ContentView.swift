@@ -33,6 +33,7 @@ struct ContentView: View {
                 
                 Section(header: Text("Make your mark")) {
                     Button("I was here") {
+                        beenHereBefore = true
                         registeredPresenceThisSession.toggle()
                         registeredPresenceCount += 1
                     }
