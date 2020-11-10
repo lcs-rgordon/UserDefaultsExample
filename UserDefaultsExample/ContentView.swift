@@ -11,11 +11,15 @@ struct ContentView: View {
     
     // How many times have you been here?
     @State private var registeredPresenceCount = 0
-    private var registeredPresenceCountKey: String = "timesUserWasPresentInApp"
+    private var registeredPresenceCountKey = "timesUserWasPresentInApp"
     
     // Have you been here before?
     @State private var beenHereBefore = false
-    private var beenHereBeforeKey: String = "hasUserBeenHereBefore"
+    private var beenHereBeforeKey = "hasUserBeenHereBefore"
+    
+    // What's your name?
+    @State private var name = ""
+    private var nameKey = "username"
     
     // Has presence been registered yet this session?
     @State private var registeredPresenceThisSession = false
@@ -26,9 +30,13 @@ struct ContentView: View {
             Form {
                 Section(header: Text("Details")) {
                     if beenHereBefore {
-                        Text("You've been here before")
+                        Text("Welcome back, \(name).")
                     } else {
                         Text("Welcome, stranger.")
+                        HStack {
+                            Text("My name is: ")
+                            TextField("Enter your name...", text: $name)
+                        }
                     }
                     Text("You have been here \(registeredPresenceCount) times before")
                 }
@@ -58,7 +66,12 @@ struct ContentView: View {
             
             // Save the number of times the person has been here when app ends
             defaults.set(registeredPresenceCount, forKey: registeredPresenceCountKey)
+            
+            // Save whether the user has been here at all before (boolean)
             defaults.set(beenHereBefore, forKey: beenHereBeforeKey)
+            
+            // Save the user's name
+            defaults.set(name, forKey: nameKey)
             
         }
         .onAppear() {
@@ -74,6 +87,9 @@ struct ContentView: View {
             
             // Get the count of times the user has been here before
             registeredPresenceCount = defaults.integer(forKey: registeredPresenceCountKey)
+            
+            // Get the user's name back or set a default value of an empty string
+            name = defaults.object(forKey: nameKey) as? String ?? ""
             
         }
     }
