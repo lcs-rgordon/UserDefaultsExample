@@ -15,8 +15,12 @@ struct ContentView: View {
     // Have you been here before?
     @State private var beenHereBefore = false
     
+    // Has presense been registered yet this session?
+    @State private var registeredPresenceThisSession = false
+    
     var body: some View {
         VStack {
+            
             Form {
                 Section(header: Text("Details")) {
                     if beenHereBefore {
@@ -26,7 +30,18 @@ struct ContentView: View {
                     }
                     Text("You have been here \(registeredPresenceCount) times before")
                 }
+                
+                Section(header: Text("Make your mark")) {
+                    Button("I was here") {
+                        registeredPresenceThisSession.toggle()
+                        registeredPresenceCount += 1
+                    }
+                    .disabled(registeredPresenceThisSession)
+                }
+                
+                
             }
+            
         }
     }
 }
