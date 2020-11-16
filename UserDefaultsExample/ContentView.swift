@@ -9,6 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     
+    // App icon
+    // File by ibrandify from the Noun Project
+    
     // How many times have you been here?
     @State private var registeredPresenceCount = 0
     private var registeredPresenceCountKey = "timesUserWasPresentInApp"
