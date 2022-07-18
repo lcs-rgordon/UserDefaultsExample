@@ -12,6 +12,8 @@ struct ContentView: View {
     // App icon
     // File by ibrandify from the Noun Project
     
+    // MARK: Stored properties
+    
     // Be able to detect when app is backgrounded
     @Environment(\.scenePhase) var scenePhase
     
@@ -30,6 +32,12 @@ struct ContentView: View {
     // Has presence been registered yet this session?
     @State private var userHasRegisteredPresenceThisSession = false
     
+    // MARK: Computed properties
+    var pluralization: String {
+        // Return an "s" whenever the count is something other than 1
+        return registeredPresenceCount == 1 ? "" : "s"
+    }
+    
     var body: some View {
         
         HStack {
@@ -46,7 +54,7 @@ struct ContentView: View {
                     TextField("Enter your name...", text: $name)
                 }
                 
-                Text("You have been here \(registeredPresenceCount) time\(registeredPresenceCount > 1 ? "s" : "") before.")
+                Text("You have been here \(registeredPresenceCount) time\(pluralization) before.")
                     .padding(.vertical)
                 
                 Button("Record your presence") {
