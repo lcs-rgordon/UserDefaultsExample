@@ -52,8 +52,11 @@ struct ContentView: View {
                 Button("Record your presence") {
                     recordThatUserWasHere()
                 }
-                .disabled(userHasRegisteredPresenceThisSession)
                 .buttonStyle(.bordered)
+                // Only let button be pressed once per run of the app
+                .disabled(userHasRegisteredPresenceThisSession)
+                // Only let button be pressed when user has entered a name
+                .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 
                 Spacer()
                 
