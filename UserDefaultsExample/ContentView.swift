@@ -15,17 +15,17 @@ struct ContentView: View {
     // Be able to detect when app is backgrounded
     @Environment(\.scenePhase) var scenePhase
     
+    // Using UserDefaults / AppStorage to save state
+    // See: https://www.hackingwithswift.com/books/ios-swiftui/storing-user-settings-with-userdefaults
+
     // How many times have you been here?
-    @State private var registeredPresenceCount = 0
-    private var registeredPresenceCountKey = "timesUserWasPresentInApp"
+    @AppStorage(registeredPresenceCountKey) private var registeredPresenceCount = 0
     
     // Have you been here before?
-    @State private var beenHereBefore = false
-    private var beenHereBeforeKey = "hasUserBeenHereBefore"
+    @AppStorage(beenHereBeforeKey) private var beenHereBefore = false
     
     // What's your name?
-    @State private var name = ""
-    private var nameKey = "username"
+    @AppStorage(nameKey) private var name = ""
     
     // Has presence been registered yet this session?
     @State private var userHasRegisteredPresenceThisSession = false
@@ -73,8 +73,6 @@ struct ContentView: View {
                 
                 print("Active")
 
-                restoreState()
-                
             } else if newPhase == .inactive {
                 
                 print("Inactive")
@@ -86,50 +84,15 @@ struct ContentView: View {
                 // Make sure the button can be presssed when app is opened again
                 userHasRegisteredPresenceThisSession = false
                 
-                saveState()
-                
             }
         }
     }
     
-    // MARK: Functions
-    func restoreState() {
-        
-        // Gain access to user defaults
-        let defaults = UserDefaults.standard
-        
-        // Get the boolean
-        beenHereBefore = defaults.bool(forKey: beenHereBeforeKey)
-        
-        // Get the count of times the user has been here before
-        registeredPresenceCount = defaults.integer(forKey: registeredPresenceCountKey)
-        
-        // Get the user's name back or set a default value of an empty string
-        name = defaults.object(forKey: nameKey) as? String ?? ""
-
-    }
-    
-    func saveState() {
-        
-        // Gain access to user defaults
-        let defaults = UserDefaults.standard
-        
-        // Save the number of times the person has been here when app ends
-        defaults.set(registeredPresenceCount, forKey: registeredPresenceCountKey)
-        
-        // Save whether the user has been here at all before (boolean)
-        defaults.set(beenHereBefore, forKey: beenHereBeforeKey)
-        
-        // Save the user's name
-        defaults.set(name, forKey: nameKey)
-
-    }
-    
+    // MARK: Function(s)
     func recordThatUserWasHere() {
         beenHereBefore = true
         userHasRegisteredPresenceThisSession.toggle()
         registeredPresenceCount += 1
-        saveState()
     }
 }
 

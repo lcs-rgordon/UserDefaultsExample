@@ -11,6 +11,7 @@
 		0EFF87C4255AE8F800A2419F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFF87C3255AE8F800A2419F /* ContentView.swift */; };
 		0EFF87C6255AE90400A2419F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EFF87C5255AE90400A2419F /* Assets.xcassets */; };
 		0EFF87C9255AE90400A2419F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EFF87C8255AE90400A2419F /* Preview Assets.xcassets */; };
+		81D61E0328858668004A28C5 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D61E0228858668004A28C5 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +40,7 @@
 		0EFF87CA255AE90400A2419F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0EFF87CF255AE90400A2419F /* UserDefaultsExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UserDefaultsExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EFF87DA255AE90400A2419F /* UserDefaultsExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UserDefaultsExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		81D61E0228858668004A28C5 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				0EFF87C1255AE8F700A2419F /* UserDefaultsExampleApp.swift */,
+				81D61E0228858668004A28C5 /* Constants.swift */,
 				0EFF87C3255AE8F800A2419F /* ContentView.swift */,
 				0EFF87C5255AE90400A2419F /* Assets.xcassets */,
 				0EFF87CA255AE90400A2419F /* Info.plist */,
@@ -235,6 +238,7 @@
 			files = (
 				0EFF87C4255AE8F800A2419F /* ContentView.swift in Sources */,
 				0EFF87C2255AE8F700A2419F /* UserDefaultsExampleApp.swift in Sources */,
+				81D61E0328858668004A28C5 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
