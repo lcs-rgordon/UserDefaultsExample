@@ -28,86 +28,105 @@ struct ContentView: View {
     private var nameKey = "username"
     
     // Has presence been registered yet this session?
-    @State private var registeredPresenceThisSession = false
+    @State private var userHasRegisteredPresenceThisSession = false
     
     var body: some View {
-        VStack {
-            
-            Form {
-                Section(header: Text("Details")) {
-                    if beenHereBefore {
-                        Text("Welcome back, \(name).")
-                    } else {
-                        Text("Welcome, stranger.")
-                        HStack {
-                            Text("My name is: ")
-                            TextField("Enter your name...", text: $name)
-                        }
-                    }
-                    Text("You have been here \(registeredPresenceCount) times before")
+        
+        HStack {
+
+            VStack(alignment: .leading, spacing: 10) {
+                
+                if beenHereBefore {
+                    Text("Welcome, \(name).")
+                        .font(.title)
+                } else {
+                    Text("Welcome, stranger.")
+                        .font(.title)
+                    Text("What is your name? ")
+                    TextField("Enter your name...", text: $name)
                 }
                 
-                Section(header: Text("Make your mark")) {
-                    Button("I was here") {
-                        beenHereBefore = true
-                        registeredPresenceThisSession.toggle()
-                        registeredPresenceCount += 1
-                    }
-                    .disabled(registeredPresenceThisSession)
-                }
+                Text("You have been here \(registeredPresenceCount) time\(registeredPresenceCount > 1 ? "s" : "") before.")
+                    .padding(.vertical)
                 
+                Button("Record your presence") {
+                    recordThatUserWasHere()
+                }
+                .disabled(userHasRegisteredPresenceThisSession)
+                .buttonStyle(.bordered)
+                
+                Spacer()
                 
             }
+
+            Spacer()
             
         }
+        .padding()
         // See: https://www.hackingwithswift.com/books/ios-swiftui/how-to-be-notified-when-your-swiftui-app-moves-to-the-background
         .onChange(of: scenePhase) { newPhase in
+            
             if newPhase == .active {
                 
                 print("Active")
-                
-                // When app is opened, retrieve data from UserDefaults storage
-                print("App is active!")
-                
-                // Gain access to user defaults
-                let defaults = UserDefaults.standard
-                
-                // Get the boolean
-                beenHereBefore = defaults.bool(forKey: beenHereBeforeKey)
-                
-                // Get the count of times the user has been here before
-                registeredPresenceCount = defaults.integer(forKey: registeredPresenceCountKey)
-                
-                // Get the user's name back or set a default value of an empty string
-                name = defaults.object(forKey: nameKey) as? String ?? ""
 
+                restoreState()
                 
             } else if newPhase == .inactive {
                 
                 print("Inactive")
                 
             } else if newPhase == .background {
-
+                
                 print("Background")
-
+                
                 // Make sure the button can be presssed when app is opened again
-                print("Moving to the background!")
-                registeredPresenceThisSession = false
+                userHasRegisteredPresenceThisSession = false
                 
-                // Gain access to user defaults
-                let defaults = UserDefaults.standard
+                saveState()
                 
-                // Save the number of times the person has been here when app ends
-                defaults.set(registeredPresenceCount, forKey: registeredPresenceCountKey)
-                
-                // Save whether the user has been here at all before (boolean)
-                defaults.set(beenHereBefore, forKey: beenHereBeforeKey)
-                
-                // Save the user's name
-                defaults.set(name, forKey: nameKey)
-
             }
         }
+    }
+    
+    // MARK: Functions
+    func restoreState() {
+        
+        // Gain access to user defaults
+        let defaults = UserDefaults.standard
+        
+        // Get the boolean
+        beenHereBefore = defaults.bool(forKey: beenHereBeforeKey)
+        
+        // Get the count of times the user has been here before
+        registeredPresenceCount = defaults.integer(forKey: registeredPresenceCountKey)
+        
+        // Get the user's name back or set a default value of an empty string
+        name = defaults.object(forKey: nameKey) as? String ?? ""
+
+    }
+    
+    func saveState() {
+        
+        // Gain access to user defaults
+        let defaults = UserDefaults.standard
+        
+        // Save the number of times the person has been here when app ends
+        defaults.set(registeredPresenceCount, forKey: registeredPresenceCountKey)
+        
+        // Save whether the user has been here at all before (boolean)
+        defaults.set(beenHereBefore, forKey: beenHereBeforeKey)
+        
+        // Save the user's name
+        defaults.set(name, forKey: nameKey)
+
+    }
+    
+    func recordThatUserWasHere() {
+        beenHereBefore = true
+        userHasRegisteredPresenceThisSession.toggle()
+        registeredPresenceCount += 1
+        saveState()
     }
 }
 
