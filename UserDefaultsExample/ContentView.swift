@@ -12,6 +12,9 @@ struct ContentView: View {
     // App icon
     // File by ibrandify from the Noun Project
     
+    // Be able to detect when app is backgrounded
+    @Environment(\.scenePhase) var scenePhase
+    
     // How many times have you been here?
     @State private var registeredPresenceCount = 0
     private var registeredPresenceCountKey = "timesUserWasPresentInApp"
@@ -58,42 +61,52 @@ struct ContentView: View {
             
         }
         // See: https://www.hackingwithswift.com/books/ios-swiftui/how-to-be-notified-when-your-swiftui-app-moves-to-the-background
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-            
-            // Make sure the button can be presssed when app is opened again
-            print("Moving to the background!")
-            registeredPresenceThisSession = false
-            
-            // Gain access to user defaults
-            let defaults = UserDefaults.standard
-            
-            // Save the number of times the person has been here when app ends
-            defaults.set(registeredPresenceCount, forKey: registeredPresenceCountKey)
-            
-            // Save whether the user has been here at all before (boolean)
-            defaults.set(beenHereBefore, forKey: beenHereBeforeKey)
-            
-            // Save the user's name
-            defaults.set(name, forKey: nameKey)
-            
-        }
-        .onAppear() {
-            
-            // When app is opened, retrieve data from UserDefaults storage
-            print("Moving back to the foreground!")
-            
-            // Gain access to user defaults
-            let defaults = UserDefaults.standard
-            
-            // Get the boolean
-            beenHereBefore = defaults.bool(forKey: beenHereBeforeKey)
-            
-            // Get the count of times the user has been here before
-            registeredPresenceCount = defaults.integer(forKey: registeredPresenceCountKey)
-            
-            // Get the user's name back or set a default value of an empty string
-            name = defaults.object(forKey: nameKey) as? String ?? ""
-            
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                
+                print("Active")
+                
+                // When app is opened, retrieve data from UserDefaults storage
+                print("App is active!")
+                
+                // Gain access to user defaults
+                let defaults = UserDefaults.standard
+                
+                // Get the boolean
+                beenHereBefore = defaults.bool(forKey: beenHereBeforeKey)
+                
+                // Get the count of times the user has been here before
+                registeredPresenceCount = defaults.integer(forKey: registeredPresenceCountKey)
+                
+                // Get the user's name back or set a default value of an empty string
+                name = defaults.object(forKey: nameKey) as? String ?? ""
+
+                
+            } else if newPhase == .inactive {
+                
+                print("Inactive")
+                
+            } else if newPhase == .background {
+
+                print("Background")
+
+                // Make sure the button can be presssed when app is opened again
+                print("Moving to the background!")
+                registeredPresenceThisSession = false
+                
+                // Gain access to user defaults
+                let defaults = UserDefaults.standard
+                
+                // Save the number of times the person has been here when app ends
+                defaults.set(registeredPresenceCount, forKey: registeredPresenceCountKey)
+                
+                // Save whether the user has been here at all before (boolean)
+                defaults.set(beenHereBefore, forKey: beenHereBeforeKey)
+                
+                // Save the user's name
+                defaults.set(name, forKey: nameKey)
+
+            }
         }
     }
 }
